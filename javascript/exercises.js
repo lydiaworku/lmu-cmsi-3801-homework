@@ -15,8 +15,16 @@ export function change(amount) {
   return counts
 }
 
-// Write your first then lower case function here
+export function firstThenLowerCase(a, p) {
+  for (let index = 0; index < a.length; index++) {
+    const element = a[index];
+    if (p(element)) {
+      return a[index].toLowerCase();
+    }
+  return None
 
+  }
+}
 // Write your powers generator here
 
 // Write your say function here
