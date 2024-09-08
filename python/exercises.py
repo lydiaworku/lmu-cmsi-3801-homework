@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Iterator
 from collections.abc import Callable
 
 
@@ -26,7 +26,7 @@ def first_then_lower_case(a: list[str], p: Callable[[str], bool]) -> Optional[st
 
 
 # Write your powers generator here
-def powers_generator(base: int, limit: int):
+def powers_generator(base: int, limit: int) -> Iterator[int]:
     power: int = 0
     result: int = 0
     while result < limit:
@@ -36,12 +36,25 @@ def powers_generator(base: int, limit: int):
             yield result
 
 
-
 # Write your say function here
-    
+
 
 
 # Write your line count function here
+
+
+def meaningful_line_count(filename: str) -> int:
+    try:
+        with open(filename, 'r') as file: # opening the file in reading mode
+            all_lines: list[str] = file.readlines() # list of all the lines
+            count: int = 0
+            for line in all_lines: # for each line in the list of lines, strips it and checks if it starts with #
+                stripped_lines: str = line.strip()
+                if not stripped_lines.startswith('#'):
+                    count += 1
+            return count # returns the number of lines that are not whitespace or start with #
+    except FileNotFoundError: # exception if the file is not found
+        raise FileNotFoundError(f"No such file: '{filename}'")
 
 
 # Write your Quaternion class here
