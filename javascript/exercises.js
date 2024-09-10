@@ -16,18 +16,42 @@ export function change(amount) {
 }
 
 export function firstThenLowerCase(a, p) {
-  for (let index = 0; index < a.length; index++) {
-    const element = a[index];
-    if (p(element)) {
-      return a[index].toLowerCase();
+  for (let index of a) {
+      if (p(index)) {
+          return index?.toLowerCase();
+      }
+  }
+  return undefined;
+}
+
+
+// Write your powers generator here
+export function* powersGenerator({ofBase, upTo}) {
+  let power = 0;
+  let result = 0;
+
+  while (result < upTo) {
+    result = Math.pow(ofBase, power);
+    power += 1;
+    if (result <= upTo) {
+      yield result;
     }
-  return None
+
 
   }
 }
-// Write your powers generator here
 
 // Write your say function here
+
+function say(word = null) {
+  if (word === null) {
+      return "";
+  } else {
+      return function(nextWord = null) {
+          return nextWord !== null ? say(word + " " + nextWord) : word;
+      };
+  }
+}
 
 // Write your line count function here
 
