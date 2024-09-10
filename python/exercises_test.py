@@ -1,9 +1,9 @@
 from exercises import (
     first_then_lower_case,
-    # say,
+    say,
     powers_generator,
     meaningful_line_count,
-    # Quaternion,
+    Quaternion,
     change)
 
 ################################################################################
@@ -46,15 +46,15 @@ expect(first_then_lower_case(["", "A", "B"], nonempty) == "a")
 expect(first_then_lower_case(["", "A", "ABC"], length_greater_than_3) is None)
 expect(first_then_lower_case(["ABC", "ABCD", "ABCDE"], length_greater_than_3) == "abcd")
 
-# suite("say")
-# expect(say() == "")
-# expect(say("hi")() == "hi")
-# expect(say("hi")("there")() == "hi there")
-# expect(say("hello")("my")("name")("is")("Colette")() == "hello my name is Colette")
-# expect(say("h i")() == "h i")
-# expect(say("hi ")("   there")() == "hi     there")
-# expect(say("")("")("dog")("")("go")() == "  dog  go")
-# expect(say("😄🤗")("💀👊🏾")() == "😄🤗 💀👊🏾")
+suite("say")
+expect(say() == "")
+expect(say("hi")() == "hi")
+expect(say("hi")("there")() == "hi there")
+expect(say("hello")("my")("name")("is")("Colette")() == "hello my name is Colette")
+expect(say("h i")() == "h i")
+expect(say("hi ")("   there")() == "hi     there")
+expect(say("")("")("dog")("")("go")() == "  dog  go")
+expect(say("😄🤗")("💀👊🏾")() == "😄🤗 💀👊🏾")
 
 suite("powers_generator")
 g1 = powers_generator(base=2, limit=1)
@@ -73,35 +73,35 @@ suite("meaningful_line_count")
 expect_error(FileNotFoundError, 'No such file', meaningful_line_count, "no-such-file.txt")
 expect(meaningful_line_count("../test-for-line-count.txt") == 5)
 
-# suite("Quaternion")
-# q = Quaternion(3.5, 2.25, -100.0, -1.25)
-# expect(q.a == 3.5)
-# expect(q.b == 2.25)
-# expect(q.c == -100.0)
-# expect(q.d == -1.25)
+suite("Quaternion")
+q = Quaternion(3.5, 2.25, -100.0, -1.25)
+expect(q.a == 3.5)
+expect(q.b == 2.25)
+expect(q.c == -100.0)
+expect(q.d == -1.25)
 
-# q1 = Quaternion(1.0, 3.0, 5.0, 2.0)
-# q2 = Quaternion(-2.0, 2.0, 8.0, -1.0)
-# q3 = Quaternion(-1.0, 5.0, 13.0, 1.0)
-# q4 = Quaternion(-46.0, -25.0, 5.0, 9.0)
+q1 = Quaternion(1.0, 3.0, 5.0, 2.0)
+q2 = Quaternion(-2.0, 2.0, 8.0, -1.0)
+q3 = Quaternion(-1.0, 5.0, 13.0, 1.0)
+q4 = Quaternion(-46.0, -25.0, 5.0, 9.0)
 
-# zero = Quaternion(0, 0, 0, 0)
-# i = Quaternion(0, 1, 0, 0)
-# j = Quaternion(0, 0, 1, 0)
-# k = Quaternion(0, 0, 0, 1)
+zero = Quaternion(0, 0, 0, 0)
+i = Quaternion(0, 1, 0, 0)
+j = Quaternion(0, 0, 1, 0)
+k = Quaternion(0, 0, 0, 1)
 
-# expect(zero.coefficients == (0.0, 0.0, 0.0, 0.0))
-# expect(k.coefficients == (0.0, 0.0, 0.0, 1.0))
-# expect(q2.coefficients == (-2.0, 2.0, 8.0, -1.0))
+expect(zero.coefficients == (0.0, 0.0, 0.0, 0.0))
+expect(k.coefficients == (0.0, 0.0, 0.0, 1.0))
+expect(q2.coefficients == (-2.0, 2.0, 8.0, -1.0))
 # expect(q4.conjugate == Quaternion(-46.0, 25.0, -5.0, -9.0))
 
-# expect(q1 + q2 == q3)
-# expect(q1 * q2 == q4)
-# expect(q1 + zero == q1)
-# expect(q1 * zero == zero)
-# expect(i * j == k)
-# expect(j * k == i)
-# expect(j + i == Quaternion(0.0, 1.0, 1.0, 0.0))
+expect(q1 + q2 == q3)
+expect(q1 * q2 == q4)
+expect(q1 + zero == q1)
+expect(q1 * zero == zero)
+expect(i * j == k)
+expect(j * k == i)
+expect(j + i == Quaternion(0.0, 1.0, 1.0, 0.0))
 
 # expect(f"{zero}" == "0")
 # expect(f"{j}" == "j")
