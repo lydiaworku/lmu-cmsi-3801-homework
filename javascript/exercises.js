@@ -1,5 +1,6 @@
 import { open } from "node:fs/promises"
 
+
 export function change(amount) {
   if (!Number.isInteger(amount)) {
     throw new TypeError("Amount must be an integer")
@@ -32,17 +33,15 @@ export function* powersGenerator({ofBase, upTo}) {
 
   while (result < upTo) {
     result = Math.pow(ofBase, power);
-    power += 1;
+    power ++ ;
     if (result <= upTo) {
       yield result;
     }
-
 
   }
 }
 
 // Write your say function here
-
 export function say(word = null) {
   if (word === null) {
       return "";
@@ -54,5 +53,39 @@ export function say(word = null) {
 }
 
 // Write your line count function here
+
+
+export async function meaningfulLineCount(filename) {
+  let fileHandle; 
+
+  try {
+    const fileHandle = await open(filename, 'r');
+    const fileContents = await fileHandle.readFile('utf-8');
+    const theLines = fileContents.split('\n');
+    let count = 0;
+
+    for (let line of theLines) {
+      const stripLine = line.trim()
+      if (stripLine && !stripLine.startsWith('#')) {
+        count += 1;
+      }
+    }
+
+    return count;
+
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      throw new Error(`No such file '${filename}'`);
+    }
+    throw err;
+    
+  } finally {
+    if (fileHandle) {
+        await fileHandle.close(); 
+    }
+}
+}
+
+
 
 // Write your Quaternion class here

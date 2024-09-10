@@ -5,7 +5,7 @@ import {
   firstThenLowerCase,
   say,
   powersGenerator,
-  // meaningfulLineCount,
+  meaningfulLineCount,
   // Quaternion,
 } from "./exercises.js"
 
@@ -90,15 +90,15 @@ describe("The powers generator", () => {
   })
 })
 
-// describe("The meaningfulLineCount function", async () => {
-//   await it("throws if no such file", async () => {
-//     rejects(async () => await meaningfulLineCount("NoSuchFile.txt"), /Error/)
-//   })
-//   await it("correctly counts lines for the test file", async () => {
-//     const count = await meaningfulLineCount("../test-for-line-count.txt")
-//     deepEqual(count, 5)
-//   })
-// })
+describe("The meaningfulLineCount function", async () => {
+  await it("throws if no such file", async () => {
+    rejects(async () => await meaningfulLineCount("NoSuchFile.txt"), /Error/)
+  })
+  await it("correctly counts lines for the test file", async () => {
+    const count = await meaningfulLineCount("../test-for-line-count.txt")
+    deepEqual(count, 5)
+  })
+})
 
 // describe("The Quaternion class", () => {
 //   const zero = new Quaternion(0, 0, 0, 0)
