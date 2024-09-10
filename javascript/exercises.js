@@ -43,7 +43,7 @@ export function* powersGenerator({ofBase, upTo}) {
 
 // Write your say function here
 
-function say(word = null) {
+export function say(word = null) {
   if (word === null) {
       return "";
   } else {
