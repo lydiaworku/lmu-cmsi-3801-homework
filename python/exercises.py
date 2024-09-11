@@ -62,14 +62,17 @@ def meaningful_line_count(filename: str) -> int:
 
 # Write your Quaternion class here
 
+@dataclass(frozen=True)
 class Quaternion:
-    def __init__(self, a: float, b: float, c: float, d: float):
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
+    a: float
+    b: float
+    c: float
+    d: float
 
-        self.coefficients: tuple[float, float, float, float] = (a, b, c, d)
+    @property
+    def coefficients(self):
+        co: tuple[float, float, float, float] = (self.a, self.b, self.c, self.d)
+        return co
 
     @property
     def conjugate(self):
