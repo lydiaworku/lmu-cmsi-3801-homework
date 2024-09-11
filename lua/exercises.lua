@@ -56,7 +56,26 @@ function say(word)
   end -- ending the function
 end
 
-
 -- Write your line count function here
+function meaningful_line_count(filename)
+  local file, err = io.open(filename, "r") -- opening the file in reading mode
+  if not file then
+    error("No such file " .. filename)
+  end -- throwing errors if the file is not found
+
+  local count = 0
+
+  for line in file:lines() do -- going through each line in the file
+    local stripped_line = line:match("^%s*(.-)%s*$") -- getting rid of the whitespace
+    if stripped_line ~= "" and not stripped_line:find("^%s*#") then
+      count = count + 1
+    end
+  end
+
+  file:close()
+  return count
+
+end
+
 
 -- Write your Quaternion table here

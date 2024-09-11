@@ -93,9 +93,9 @@ expect(say("hi ")("   there")() == "hi     there")
 expect(say("")("")("dog")("")("go")() == "  dog  go")
 expect(say("😄🤗")("💀👊🏾")() == "😄🤗 💀👊🏾")
 
--- suite("meaningful_line_count")
--- expect_error("No such file", meaningful_line_count, "no-such-file.txt")
--- expect(meaningful_line_count("../test-for-line-count.txt") == 5)
+suite("meaningful_line_count")
+expect_error("No such file", meaningful_line_count, "no-such-file.txt")
+expect(meaningful_line_count("../test-for-line-count.txt") == 5)
 
 -- suite("Quaternion")
 -- q = Quaternion.new(3.5, 2.25, -100.0, -1.25)
