@@ -42,6 +42,20 @@ end -- ending the function
   
   
 -- Write your say function here
+function say(word)
+  if word == nil then
+    return ""
+  else
+    return function(next_word)
+      if next_word ~= nil then
+        return say(word .. " " .. next_word)
+      else
+        return word
+      end -- ending the conditional
+    end -- ending the return statement
+  end -- ending the function
+end
+
 
 -- Write your line count function here
 
