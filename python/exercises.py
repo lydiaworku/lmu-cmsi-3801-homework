@@ -23,8 +23,6 @@ def first_then_lower_case(a: list[str], p: Callable[[str], bool]) -> Optional[st
             return a_string.lower()
     return None
 
-
-
 # Write your powers generator here
 def powers_generator(base: int, limit: int) -> Iterator[int]:
     power: int = 0
@@ -73,9 +71,9 @@ class Quaternion:
 
         self.coefficients: tuple[float, float, float, float] = (a, b, c, d)
 
+    @property
     def conjugate(self):
-        print(self.a, -(self.b), -(self.c), -(self.d))
-        return Quaternion(self.a, -(self.b), -(self.c), -(self.d))
+        return Quaternion(self.a, -self.b, -self.c, -self.d)
 
     def __add__(self, other):
         if isinstance(other, Quaternion):
@@ -84,8 +82,9 @@ class Quaternion:
         
     def __eq__(self, other):
         if isinstance(other, Quaternion):
-            if self.a == other.a and self.b == other.b and self.c == other.c and self.d == other.d:
-                return True
+            return self.a == other.a and self.b == other.b and self.c == other.c and self.d == other.d
+        return False
+
 
     def __mul__(self, other):
         if isinstance(other, Quaternion):
@@ -96,4 +95,30 @@ class Quaternion:
             mult_quat = Quaternion(mult_a, mult_b, mult_c, mult_d)
             return mult_quat
         
-        
+    def __str__(self):
+        set_of_values: list[tuple[float, str]] = [(self.b, "i"), (self.c, "j"), (self.d, "k")]
+        total: str = ""
+        if self.a == 0 and self.b == 0 and self.c == 0 and self.d == 0:
+            return "0"
+        if self.a != 0:
+            total += f"{self.a}"
+        for (val, letter) in set_of_values:
+            if val > 0 and val != 1:
+                if total == "": 
+                    total += f"{val}"
+                    total += f"{letter}"
+                else:
+                    total += f"+{val}"
+                    total += f"{letter}"
+            elif val < 0 and val != -1:
+                total += f"{val}"
+                total += f"{letter}"
+            elif val == 1:
+                if total == "":
+                    total += f"{letter}"
+                else:
+                    total += f"+{letter}"
+            elif val == -1:
+                total += f"-{letter}"
+        return total
+
