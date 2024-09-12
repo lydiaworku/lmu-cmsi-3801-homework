@@ -79,3 +79,78 @@ end
 
 
 -- Write your Quaternion table here
+Quaternion = {}
+Quaternion.__index = Quaternion
+
+function Quaternion.new(a, b, c, d)
+  return setmetatable({a = a, b = b, c = c, d = d}, Quaternion)
+end
+
+function Quaternion:coefficients()
+  return {self.a, self.b, self.c, self.d}
+end
+
+function Quaternion:conjugate()
+  return Quaternion.new(self.a, -self.b, -self.c, -self.d)
+end
+
+function Quaternion.__add(original, other)
+  return Quaternion.new(original.a + other.a, original.b + other.b, original.c + other.c, original.d + other.d)
+end
+
+function Quaternion.__eq(original, other)
+  return original.a == other.a and original.b == other.b and original.c == other.c and original.d == other.d
+end
+
+function Quaternion.__mul(original, other)
+  mult_a = (original.a * other.a) - (original.b * other.b) - (original.c * other.c) - (original.d * other.d)
+  mult_b = (original.a * other.b) + (original.b * other.a) + (original.c * other.d) - (original.d * other.c)
+  mult_c = (original.a * other.c) - (original.b * other.d) + (original.c * other.a) + (original.d * other.b)
+  mult_d = (original.a * other.d) + (original.b * other.c) - (original.c * other.b) + (original.d * other.a)
+  return Quaternion.new(mult_a, mult_b, mult_c, mult_d)
+end
+
+function Quaternion.__tostring(self)
+  setofvalues = {{self.b, "i"}, {self.c, "j"}, {self.d, "k"}}
+  total = ""
+
+  if self.a == 0 and self.b == 0 and self.c == 0 and self.d == 0 then
+    return "0"
+  end
+
+  if self.a ~= 0 then
+    total = total .. string.format("%s", self.a)
+  end
+
+  for _, pair in ipairs(setofvalues) do
+    val, letter = pair[1], pair[2]
+    if val > 0 and val ~= 1 then
+      if total == "" then
+        total = total .. string.format("%s", val)
+        total = total .. string.format("%s", letter)
+      else
+        total = total .. "+" .. string.format("%s", val)
+        total = total .. string.format("%s", letter)
+      end
+
+    elseif val < 0 and val ~= -1 then
+      total = total .. string.format("%s", val)
+      total = total .. string.format("%s", letter)
+    
+    elseif val == 1 then
+      if total == "" then
+        total = total .. string.format("%s", letter)
+      else
+        total = total .. "+" .. string.format("%s", letter)
+      end
+
+    elseif val == -1 then
+      total = total .. "-" .. string.format("%s", letter)
+    end
+  end
+
+  return total
+
+end
+
+
