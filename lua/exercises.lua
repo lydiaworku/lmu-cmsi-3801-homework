@@ -122,7 +122,7 @@ function Quaternion.__tostring(self)
     total = total .. string.format("%s", self.a)
   end
 
-  for _, pair in ipairs(setofvalues) do
+  for _, pair in pairs(setofvalues) do
     val, letter = pair[1], pair[2]
     if val > 0 and val ~= 1 then
       if total == "" then
