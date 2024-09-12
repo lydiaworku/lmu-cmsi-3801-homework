@@ -1,4 +1,4 @@
-import { open } from "node:fs/promises"
+import { open } from "fs/promises"
 
 
 export function change(amount) {
@@ -89,3 +89,100 @@ export async function meaningfulLineCount(filename) {
 
 
 // Write your Quaternion class here
+
+export class Quaternion {
+  constructor(a, b, c, d) {
+      this.a = a;
+      this.b = b;
+      this.c = c;
+      this.d = d;
+      Object.freeze(this); // freezing the objects upn construction
+  }
+
+  get coefficients() { // getter method for coefficients
+      return [this.a, this.b, this.c, this.d];
+  }
+
+  get conjugate() { // getter method for conjugates
+      return new Quaternion(this.a, -this.b, -this.c, -this.d);
+  }
+
+  plus(other) {
+      if (other instanceof Quaternion) {
+          return new Quaternion(
+              this.a + other.a,
+              this.b + other.b,
+              this.c + other.c,
+              this.d + other.d
+          );
+      }
+      throw new TypeError('Argument must be an instance of Quaternion');
+  }
+
+  equals(other) {
+      if (other instanceof Quaternion) {
+          return (
+              this.a === other.a &&
+              this.b === other.b &&
+              this.c === other.c &&
+              this.d === other.d
+          );
+      }
+      return false;
+  }
+
+  times(other) {
+      if (other instanceof Quaternion) {
+          const a = (this.a * other.a) - (this.b * other.b) - (this.c * other.c) - (this.d * other.d);
+          const b = (this.a * other.b) + (this.b * other.a) + (this.c * other.d) - (this.d * other.c);
+          const c = (this.a * other.c) - (this.b * other.d) + (this.c * other.a) + (this.d * other.b);
+          const d = (this.a * other.d) + (this.b * other.c) - (this.c * other.b) + (this.d * other.a);
+          return new Quaternion(a, b, c, d);
+      }
+      throw new TypeError('Argument must be an instance of Quaternion');
+  }
+
+  toString() {
+      let total = "";
+
+      if (this.a === 0 && this.b === 0 && this.c === 0 && this.d === 0) {
+        return "0";
+    }
+    
+    if (this.a !== 0) {
+        total += `${this.a}`;
+    }
+
+    const setOfValues = [
+      [this.b, 'i'],
+      [this.c, 'j'],
+      [this.d, 'k']
+  ];
+
+    for (const [val, letter] of setOfValues) {
+        if (val > 0 && val !== 1) {
+            if (total === "") {
+                total += `${val}`;
+                total += `${letter}`;
+            } else {
+                total += `+${val}`;
+                total += `${letter}`;
+            }
+        } else if (val < 0 && val !== -1) {
+            total += `${val}`;
+            total += `${letter}`;
+        } else if (val === 1) {
+            if (total === "") {
+                total += `${letter}`;
+            } else {
+                total += `+${letter}`;
+            }
+        } else if (val === -1) {
+            total += `-${letter}`;
+        }
+    }
+    
+    
+    return total;
+  }
+}
