@@ -22,7 +22,56 @@ public class Exercises {
 
     // Write your first then lower case function here
 
+    static Optional<String> firstThenLowerCase(List<String> a, Predicate<String> p) {
+        return a.stream() // converts a into a stream
+                .filter(p) // applies p to each item in the stream
+                .findFirst() // finds the first letter in the string
+                .map(String::toLowerCase); // turns the letter lowercase
+    }
+
+
     // Write your say function here
+
+
+    public static class Chainable {
+        private StringBuilder accumulatedString;
+
+        // Constructor for an initial word
+        public Chainable(String word) {
+            accumulatedString = new StringBuilder(word);
+        }
+
+        // Default constructor for empty chain
+        public Chainable() {
+            accumulatedString = new StringBuilder();
+        }
+
+        // Method to add a word to the chain
+        public Chainable and(String word) {
+            if (accumulatedString.length() > 0 && word.length() > 0) {
+                accumulatedString.append(" ");
+            } else if (accumulatedString.length() > 0 && word.length() == 0) {
+                accumulatedString.append(" ");
+            }
+            accumulatedString.append(word);
+            return this;
+        }
+
+        // Read-only property to get the accumulated string
+        public String phrase() {
+            return accumulatedString.toString();
+        }
+    }
+
+    // Static method to create a Chainable object
+    public static Chainable say(String word) {
+        return new Chainable(word);
+    }
+
+    // Overloaded method to create an empty Chainable object
+    public static Chainable say() {
+        return new Chainable();
+    }
 
     // Write your line count function here
 }
