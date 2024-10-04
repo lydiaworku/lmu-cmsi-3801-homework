@@ -20,59 +20,55 @@ public class Exercises {
         return counts;
     }
 
-    // Write your first then lower case function here
-
+    // converts the string into a stream, then applies the predicate and turns the
+    // first letter lowercase
     static Optional<String> firstThenLowerCase(List<String> strings, Predicate<String> predicate) {
-        return strings.stream() // converts a into a stream
-                .filter(predicate) // applies p to each item in the stream
-                .findFirst() // finds the first letter in the string
-                .map(String::toLowerCase); // turns the letter lowercase
+        return strings.stream()
+                .filter(predicate)
+                .findFirst()
+                .map(String::toLowerCase);
     }
-
-
-    // Write your say function here
-
 
     static record Sayer(String phrase) {
 
+        // appends words to the given phrase
         Sayer and(String word) {
             return new Sayer(this.phrase + " " + word);
         }
     }
-    
+
+    // initializes Sayer with an empty phrase
     public static Sayer say() {
         return new Sayer("");
     }
-    
+
+    // initializes Sayer with a given phrase
+
     public static Sayer say(String word) {
         return new Sayer(word);
     }
-    
-
-    // Write your line count function here
 
     public static int meaningfulLineCount(String filename) throws IOException {
         try (var reader = new BufferedReader(new FileReader(filename))) {
             return (int) reader.lines()
-                    .map(String::trim)
-                    .filter(line -> !line.isBlank() && !line.startsWith("#"))
+                    .map(String::trim) // trims whitespace
+                    .filter(line -> !line.isBlank() && !line.startsWith("#")) // doesn't count blank lines or lines that
+                                                                              // start with #
                     .count();
         }
     }
 
 }
 
-
-// Write your Quaternion record class here
-
-
 record Quaternion(double a, double b, double c, double d) {
 
+    // initializes quaternions with set values
     public final static Quaternion ZERO = new Quaternion(0, 0, 0, 0);
     public final static Quaternion I = new Quaternion(0, 1, 0, 0);
     public final static Quaternion J = new Quaternion(0, 0, 1, 0);
     public final static Quaternion K = new Quaternion(0, 0, 0, 1);
 
+    // throws errors if any of a, b, c, d are NaN
     public Quaternion {
         if (Double.isNaN(a) || Double.isNaN(b) || Double.isNaN(c) || Double.isNaN(d)) {
             throw new IllegalArgumentException("Coefficients cannot be NaN");
@@ -85,11 +81,10 @@ record Quaternion(double a, double b, double c, double d) {
 
     Quaternion times(Quaternion other) {
         return new Quaternion(
-            a * other.a - b * other.b - c * other.c - d * other.d,
-            a * other.b + b * other.a + c * other.d - d * other.c,
-            a * other.c - b * other.d + c * other.a + d * other.b,
-            a * other.d + b * other.c - c * other.b + d * other.a
-        );
+                a * other.a - b * other.b - c * other.c - d * other.d,
+                a * other.b + b * other.a + c * other.d - d * other.c,
+                a * other.c - b * other.d + c * other.a + d * other.b,
+                a * other.d + b * other.c - c * other.b + d * other.a);
     }
 
     public Quaternion conjugate() {
@@ -100,21 +95,20 @@ record Quaternion(double a, double b, double c, double d) {
         return List.of(a, b, c, d);
     }
 
+    // overrides the toString method to add coefficients to variables
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        // If all coefficients are zero, return "0"
+        // ZERO case
         if (a == 0 && b == 0 && c == 0 && d == 0) {
             return "0";
         }
 
-        // Append the real part (a), if non-zero
         if (a != 0) {
             sb.append(a);
         }
 
-        // Append imaginary parts with proper formatting
         appendComponent(sb, b, "i");
         appendComponent(sb, c, "j");
         appendComponent(sb, d, "k");
@@ -122,13 +116,12 @@ record Quaternion(double a, double b, double c, double d) {
         return sb.toString();
     }
 
+    // takes care of the addition/subtraction within quaternions for toString
     private void appendComponent(StringBuilder sb, double value, String symbol) {
         if (value != 0) {
-            // Handle sign for positive values and append value + symbol
             if (sb.length() > 0) {
-                sb.append(value > 0 ? "+" : ""); // Only add a plus if there are already components
+                sb.append(value > 0 ? "+" : "");
             }
-            // Append coefficient and symbol, handling the special cases for 1 and -1
             if (value == 1) {
                 sb.append(symbol);
             } else if (value == -1) {
@@ -140,18 +133,17 @@ record Quaternion(double a, double b, double c, double d) {
     }
 }
 
-
-
-// Write your BinarySearchTree sealed interface and its implementations here
-
 sealed interface BinarySearchTree permits Empty, Node {
     int size();
+
     boolean contains(String value);
+
     BinarySearchTree insert(String value);
 }
 
+// takes care of the case of an empty node in the BST
 final record Empty() implements BinarySearchTree {
-    
+
     @Override
     public int size() {
         return 0;
@@ -174,11 +166,13 @@ final record Empty() implements BinarySearchTree {
 
 }
 
+// holds a value, left subtree, and right subtree
 final class Node implements BinarySearchTree {
     private final String value;
     private final BinarySearchTree left;
     private final BinarySearchTree right;
 
+    // initializes the default values of the left, right, and value variables
     Node(String value, BinarySearchTree left, BinarySearchTree right) {
         this.value = value;
         this.left = left;
@@ -190,11 +184,13 @@ final class Node implements BinarySearchTree {
         return 1 + left.size() + right.size();
     }
 
+    // checks if the BST contains a given value
     @Override
     public boolean contains(String value) {
         return this.value.equals(value) || left.contains(value) || right.contains(value);
     }
 
+    // inserts a value into the BST
     @Override
     public BinarySearchTree insert(String value) {
         if (value.compareTo(this.value) < 0) {
@@ -202,9 +198,10 @@ final class Node implements BinarySearchTree {
         } else if (value.compareTo(this.value) > 0) {
             return new Node(this.value, left, right.insert(value));
         }
-        return this;  // If value is equal, return the current node (no duplicates)
+        return this;
     }
 
+    // overrides the toString method and adds parentheses to strings
     @Override
     public String toString() {
         String leftStr = left instanceof Empty ? "" : left.toString();
@@ -212,5 +209,3 @@ final class Node implements BinarySearchTree {
         return "(" + leftStr + value + rightStr + ")";
     }
 }
-
-
