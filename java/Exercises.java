@@ -52,8 +52,7 @@ public class Exercises {
         try (var reader = new BufferedReader(new FileReader(filename))) {
             return (int) reader.lines()
                     .map(String::trim) // trims whitespace
-                    .filter(line -> !line.isBlank() && !line.startsWith("#")) // doesn't count blank lines or lines that
-                                                                              // start with #
+                    .filter(line -> !line.isBlank() && !line.startsWith("#")) // doesn't count blank lines or lines that start with #
                     .count();
         }
     }
