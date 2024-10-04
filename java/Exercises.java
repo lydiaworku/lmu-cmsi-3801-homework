@@ -169,7 +169,7 @@ final record Empty() implements BinarySearchTree {
 
     @Override
     public String toString() {
-        return "";
+        return "()";
     }
 
 }
@@ -207,9 +207,10 @@ final class Node implements BinarySearchTree {
 
     @Override
     public String toString() {
-        return "(" + left + value + right + ")";
+        String leftStr = left instanceof Empty ? "" : left.toString();
+        String rightStr = right instanceof Empty ? "" : right.toString();
+        return "(" + leftStr + value + rightStr + ")";
     }
-    
 }
 
 
