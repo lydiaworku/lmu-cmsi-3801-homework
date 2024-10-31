@@ -12,12 +12,56 @@ let change amount =
     in
     aux amount denominations
 
-(* Write your first then apply function here *)
 
-(* Write your powers generator here *)
+let first_then_apply array predicate consumer =
+  match List.find_opt predicate array with
+  | None -> None
+  | Some x -> consumer x
+
+
+let powers_generator base =
+  let rec generate_from power () =
+    Seq.Cons (power, generate_from (power * base))
+
+  in
+  generate_from 1;;
 
 (* Write your line count function here *)
 
-(* Write your shape type and associated functions here *)
+type shape = 
+ | Sphere of float
+ | Box of float * float * float
+
+
+let volume s =
+  match s with
+  | Sphere r -> Float.pi *. (r ** 3.) *. 4. /. 3.
+  | Box (l, w, h) -> l *. w *. h;;
+
+let surface_area s =
+  match s with
+  | Sphere r -> 4. *. Float.pi *. (r ** 2.)
+  | Box (l, w, h) -> 2. *. (l *. w +. l *. h +. w *. h);;
+
+
+type 'a binary_search_tree =
+  | Empty
+  | Node of 'a binary_search_tree * 'a * 'a binary_search_tree
+
+let rec contains value tree =
+  match tree with
+  | Empty -> false
+  | Node (left, v, right) ->
+    if value = v then
+      true
+    else if value < v then
+      contains value left
+    else
+      contains value right;;
+
+let rec inorder tree =
+  match tree with
+  | Empty -> []
+  | Node (left, v, right) -> inorder left @ [v] @ inorder right;;
 
 (* Write your binary search tree implementation here *)
