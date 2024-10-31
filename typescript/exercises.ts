@@ -97,90 +97,104 @@ export function volume(shape: Shape): number {
   }
 }
 
-// Comparable type constraint for generic types
-export interface Comparable<T> {
-  (a: T, b: T): number; // Function that compares two elements: returns negative if a < b, 0 if a === b, positive if a > b
+
+// Define the Comparator type for comparing two values of type T
+export type Comparable<T> = (a: T, b: T) => number;
+
+// Default comparator function that assumes T can be compared with '<' and '>'
+const defaultComparator = <T>(a: T, b: T): number => {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
+};
+
+// Define the BinarySearchTree interface
+export interface BinarySearchTree<T> {
+  size(): number;
+  insert(value: T): BinarySearchTree<T>;
+  contains(value: T): boolean;
+  inorder(): Iterable<T>;
+  toString(): string;
 }
 
-// // Define the BinarySearchTree interface
-// export interface BinarySearchTree<T> {
-//   size(): number;
-//   insert(value: T): BinarySearchTree<T>;
-//   contains(value: T): boolean;
-//   inorder(): Iterable<T>;
-//   toString(): string;
-// }
+// Implementation of the Empty class (represents an empty node in the tree)
+export class Empty<T> implements BinarySearchTree<T> {
+  constructor(private comparator: Comparable<T> = defaultComparator) {}
 
-// // Define the Empty class (represents an empty node in the tree)
-// class Empty<T> implements BinarySearchTree<T> {
-//   constructor(private comparator: Comparable<T>) {}
+  size(): number {
+    return 0;
+  }
 
-//   size(): number {
-//     return 0;
-//   }
+  insert(value: T): BinarySearchTree<T> {
+    // Create a new node with value and comparator when inserting into an empty tree
+    return new Node(value, new Empty(this.comparator), new Empty(this.comparator), this.comparator);
+  }
 
-//   insert(value: T): BinarySearchTree<T> {
-//     return new Node(value, new Empty(this.comparator), new Empty(this.comparator), this.comparator);
-//   }
+  contains(value: T): boolean {
+    return false;
+  }
 
-//   contains(value: T): boolean {
-//     return false;
-//   }
+  *inorder(): Iterable<T> {
+    return;
+  }
 
-//   *inorder(): Iterable<T> {
-//     return;
-//   }
+  toString(): string {
+    return "()";
+  }
+}
 
-//   toString(): string {
-//     return "()";
-//   }
-// }
+// Implementation of the Node class (represents a node with a value in the tree)
+class Node<T> implements BinarySearchTree<T> {
+  constructor(
+    private value: T,
+    private left: BinarySearchTree<T>,
+    private right: BinarySearchTree<T>,
+    private comparator: Comparable<T>
+  ) {}
 
-// // Define the Node class (represents a node with value in the tree)
-// class Node<T> implements BinarySearchTree<T> {
-//   constructor(
-//     private value: T,
-//     private left: BinarySearchTree<T>,
-//     private right: BinarySearchTree<T>,
-//     private comparator: Comparable<T>
-//   ) {}
+  size(): number {
+    return 1 + this.left.size() + this.right.size();
+  }
 
-//   size(): number {
-//     return 1 + this.left.size() + this.right.size();
-//   }
+  insert(value: T): BinarySearchTree<T> {
+    const comp = this.comparator(value, this.value);
+    if (comp < 0) {
+      // Insert on the left side
+      return new Node(this.value, this.left.insert(value), this.right, this.comparator);
+    } else if (comp > 0) {
+      // Insert on the right side
+      return new Node(this.value, this.left, this.right.insert(value), this.comparator);
+    }
+    // No duplicates allowed, return unchanged node
+    return this;
+  }
 
-//   insert(value: T): BinarySearchTree<T> {
-//     const comp = this.comparator(value, this.value);
-//     if (comp < 0) {
-//       return new Node(this.value, this.left.insert(value), this.right, this.comparator);
-//     } else if (comp > 0) {
-//       return new Node(this.value, this.left, this.right.insert(value), this.comparator);
-//     } else {
-//       return this; // No duplicates allowed, return unchanged node
-//     }
-//   }
+  contains(value: T): boolean {
+    const comp = this.comparator(value, this.value);
+    if (comp === 0) return true;
+    if (comp < 0) return this.left.contains(value);
+    return this.right.contains(value);
+  }
 
-//   contains(value: T): boolean {
-//     const comp = this.comparator(value, this.value);
-//     if (comp === 0) return true;
-//     if (comp < 0) return this.left.contains(value);
-//     return this.right.contains(value);
-//   }
+  *inorder(): Iterable<T> {
+    yield* this.left.inorder();
+    yield this.value;
+    yield* this.right.inorder();
+  }
 
-//   *inorder(): Iterable<T> {
-//     yield* this.left.inorder();
-//     yield this.value;
-//     yield* this.right.inorder();
-//   }
+  toString(): string {
+    const leftStr = this.left.toString();
+    const rightStr = this.right.toString();
+    return `(${leftStr === "()" ? "" : leftStr}${this.value}${rightStr === "()" ? "" : rightStr})`;
+  }
+}
 
-//   toString(): string {
-//     const leftStr = this.left.toString();
-//     const rightStr = this.right.toString();
-//     return `(${leftStr === "()" ? "" : leftStr}${this.value}${rightStr === "()" ? "" : rightStr})`;
-//   }
-// }
+// Factory function to create a new BinarySearchTree with a required comparator
+export function createTree<T>(comparator?: Comparable<T>): BinarySearchTree<T> {
+  return new Empty(comparator);
+}
 
-// // Factory function to create a new BinarySearchTree
-// export function createTree<T>(comparator: Comparable<T>): BinarySearchTree<T> {
-//   return new Empty(comparator);
-// }
+// Conditional export for testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { createTree, Node, Empty };
+}
