@@ -25,8 +25,30 @@ let powers_generator base =
 
   in
   generate_from 1;;
+ 
 
-(* Write your line count function here *)
+
+  let meaningful_line_count filename =
+    let meaningful_line line =
+      let trimmed = String.trim line in
+      String.length trimmed > 0 && not (String.starts_with ~prefix:"#" trimmed)
+    in
+    let the_file = open_in filename in
+    let finally () = close_in the_file in
+    let rec count_lines count =
+      try
+        let line = input_line the_file in
+        if meaningful_line line then
+          count_lines (count + 1)
+        else
+          count_lines count
+      with
+      | End_of_file -> count
+    in
+    Fun.protect ~finally (fun () -> count_lines 0);;
+  
+
+
 
 type shape = 
  | Sphere of float
