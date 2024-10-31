@@ -27,7 +27,6 @@ let powers_generator base =
   generate_from 1;;
  
 
-
   let meaningful_line_count filename =
     let meaningful_line line =
       let trimmed = String.trim line in
@@ -48,8 +47,6 @@ let powers_generator base =
     Fun.protect ~finally (fun () -> count_lines 0);;
   
 
-
-
 type shape = 
  | Sphere of float
  | Box of float * float * float
@@ -66,24 +63,58 @@ let surface_area s =
   | Box (l, w, h) -> 2. *. (l *. w +. l *. h +. w *. h);;
 
 
+
+
+  
+(* Define the Binary Search Tree type *)
 type 'a binary_search_tree =
   | Empty
-  | Node of 'a binary_search_tree * 'a * 'a binary_search_tree
+  | Node of 'a * 'a binary_search_tree * 'a binary_search_tree
 
+(* Insert a value into the tree *)
+let rec insert value tree =
+  match tree with
+  | Empty -> Node (value, Empty, Empty)
+  | Node (v, left, right) ->
+      if value < v then
+        Node (v, insert value left, right)
+      else if value > v then
+        Node (v, left, insert value right)
+      else
+        tree  (* No duplicates allowed *)
+
+(* Check if a value exists in the tree *)
 let rec contains value tree =
   match tree with
   | Empty -> false
-  | Node (left, v, right) ->
-    if value = v then
-      true
-    else if value < v then
-      contains value left
-    else
-      contains value right;;
+  | Node (v, left, right) ->
+      if value = v then
+        true
+      else if value < v then
+        contains value left
+      else
+        contains value right
 
+(* Count the number of elements in the tree *)
+let rec size tree =
+  match tree with
+  | Empty -> 0
+  | Node (_, left, right) ->
+      1 + size left + size right
+
+(* Inorder traversal producing a list of elements *)
 let rec inorder tree =
   match tree with
   | Empty -> []
-  | Node (left, v, right) -> inorder left @ [v] @ inorder right;;
+  | Node (v, left, right) ->
+      inorder left @ [v] @ inorder right
 
-(* Write your binary search tree implementation here *)
+(* String representation of the tree *)
+let rec to_string tree =
+  match tree with
+  | Empty -> "Empty"
+  | Node (v, left, right) ->
+      Printf.sprintf "(%s, %s, %s)" (to_string left) (string_of_int v) (to_string right)
+
+(* Export the Empty constructor so it can be accessed *)
+let empty = Empty
