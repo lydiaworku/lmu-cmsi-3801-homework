@@ -24,11 +24,13 @@ change amount
                 (count, newRemaining) = remaining `divMod` d
                 newCounts = Map.insert d count counts
 
+
+-- finds first element in list that satisfies pred
 firstThenApply :: [a] -> (a -> Bool) -> (a -> b) -> Maybe b
 firstThenApply xs pred f = fmap f (find pred xs)
 
-
-powers:: Integral num => num -> [num]
+-- makes infinite list of powers of a base
+powers :: Integral num => num -> [num]
 powers base = map (base^) [0..]
 
 
@@ -39,7 +41,7 @@ meaningfulLineCount filePath = do
         trimStart = dropWhile isSpace
         isMeaningful line =
             not (allWhitespace line) &&
-            not ("#" `isPrefixOf` (trimStart line))  -- Change here
+            not ("#" `isPrefixOf` (trimStart line))
     return $ length $ filter isMeaningful (lines document)
 
 
