@@ -13,6 +13,7 @@ export function change(amount: bigint): Map<bigint, bigint> {
   return counts
 }
 
+// applies consumer function to first element that satisifies the predicate
 export function firstThenApply<T, U>(
   items: T[], 
   predicate: (item: T) => boolean, 
@@ -23,6 +24,7 @@ export function firstThenApply<T, U>(
 }
 
 
+// generates infinite powers of a base
 export function* powersGenerator(base: bigint): Generator<BigInt> {
   for (let power = 1n; ; power *= base) {
     yield power
@@ -34,13 +36,13 @@ export async function meaningfulLineCount(filename: string): Promise<number> {
   let file: any;
 
   try {
-    // Opens the file, reads its content, and splits into lines
+    // opens file, reads, and separates lines
     file = await open(filename, 'r');
     const fileContents = await file.readFile('utf-8');
     const theLines = fileContents.split('\n');
     let count = 0;
 
-    // Counts non-empty, non-comment lines
+    // counts valid lines
     for (const line of theLines) {
       const stripLine = line.trim();
       if (stripLine && !stripLine.startsWith('#')) {
@@ -50,21 +52,22 @@ export async function meaningfulLineCount(filename: string): Promise<number> {
 
     return count;
 
+    // error throwing if file doesn't exist
   } catch (err: any) {
-    // Handles file not found error
     if (err.code === 'ENOENT') {
       throw new Error(`No such file '${filename}'`);
     }
     throw err;
 
   } finally {
-    // Closes the file if it was successfully opened
+    // closes the file
     if (file) {
       await file.close();
     }
   }
 }
 
+// creates Sphere and Box interfaces
 interface Sphere {
   kind: "Sphere"
   radius: number
@@ -79,6 +82,7 @@ interface Box {
 
 export type Shape = Sphere | Box
 
+// surface aera function that calculates surface area of sphere and box
 export function surfaceArea(shape: Shape): number {
   switch (shape.kind) {
     case "Sphere":
@@ -88,6 +92,7 @@ export function surfaceArea(shape: Shape): number {
   }
 }
 
+// volume function that calculates volume of sphere and box
 export function volume(shape: Shape): number {
   switch (shape.kind) {
     case "Sphere":
@@ -98,17 +103,15 @@ export function volume(shape: Shape): number {
 }
 
 
-// Define the Comparator type for comparing two values of type T
 export type Comparable<T> = (a: T, b: T) => number;
 
-// Default comparator function that assumes T can be compared with '<' and '>'
 const defaultComparator = <T>(a: T, b: T): number => {
   if (a < b) return -1;
   if (a > b) return 1;
   return 0;
 };
 
-// Define the BinarySearchTree interface
+// BinarySearchTree interface definition
 export interface BinarySearchTree<T> {
   size(): number;
   insert(value: T): BinarySearchTree<T>;
@@ -117,7 +120,7 @@ export interface BinarySearchTree<T> {
   toString(): string;
 }
 
-// Implementation of the Empty class (represents an empty node in the tree)
+// Empty class for BST (empty node in the tree)
 export class Empty<T> implements BinarySearchTree<T> {
   constructor(private comparator: Comparable<T> = defaultComparator) {}
 
@@ -126,7 +129,6 @@ export class Empty<T> implements BinarySearchTree<T> {
   }
 
   insert(value: T): BinarySearchTree<T> {
-    // Create a new node with value and comparator when inserting into an empty tree
     return new Node(value, new Empty(this.comparator), new Empty(this.comparator), this.comparator);
   }
 
@@ -143,7 +145,7 @@ export class Empty<T> implements BinarySearchTree<T> {
   }
 }
 
-// Implementation of the Node class (represents a node with a value in the tree)
+// Node class (node with a value in the tree)
 class Node<T> implements BinarySearchTree<T> {
   constructor(
     private value: T,
@@ -159,16 +161,16 @@ class Node<T> implements BinarySearchTree<T> {
   insert(value: T): BinarySearchTree<T> {
     const comp = this.comparator(value, this.value);
     if (comp < 0) {
-      // Insert on the left side
+      // insertion on the left
       return new Node(this.value, this.left.insert(value), this.right, this.comparator);
     } else if (comp > 0) {
-      // Insert on the right side
+      // insertion on the right
       return new Node(this.value, this.left, this.right.insert(value), this.comparator);
     }
-    // No duplicates allowed, return unchanged node
     return this;
   }
 
+  // checks if BST contains a value, returns a boolean
   contains(value: T): boolean {
     const comp = this.comparator(value, this.value);
     if (comp === 0) return true;
@@ -182,6 +184,7 @@ class Node<T> implements BinarySearchTree<T> {
     yield* this.right.inorder();
   }
 
+  // turns nodes into strings
   toString(): string {
     const leftStr = this.left.toString();
     const rightStr = this.right.toString();
@@ -189,12 +192,11 @@ class Node<T> implements BinarySearchTree<T> {
   }
 }
 
-// Factory function to create a new BinarySearchTree with a required comparator
+// creates a new BinarySearchTree with a required comparator
 export function createTree<T>(comparator?: Comparable<T>): BinarySearchTree<T> {
   return new Empty(comparator);
 }
 
-// Conditional export for testing
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { createTree, Node, Empty };
 }
