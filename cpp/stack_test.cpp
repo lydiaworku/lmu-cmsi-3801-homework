@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <cstudio>
 using namespace std;
 
 #include "stack.h"
