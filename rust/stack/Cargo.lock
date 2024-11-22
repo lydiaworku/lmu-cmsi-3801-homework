@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "exercises"
+name = "stack"
 version = "0.1.0"
