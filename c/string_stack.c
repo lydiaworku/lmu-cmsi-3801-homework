@@ -9,6 +9,7 @@ struct _Stack {
   int top;
   int capacity;
 };
+
 stack_response create() {
   stack s = malloc(sizeof(struct _Stack));
   if (s == NULL) {
@@ -36,7 +37,7 @@ response_code push(stack s, char *item) {
     return stack_full;
   }
 
-  if (strlen(item) > MAX_ELEMENT_BYTE_SIZE) { // Ensure the item isn't too large
+  if (strlen(item) > MAX_ELEMENT_BYTE_SIZE) { // make sure the item isn't too large
     return stack_element_too_large;
   }
   if (s->top == s->capacity) {
@@ -53,8 +54,6 @@ response_code push(stack s, char *item) {
     s->capacity = new_capacity;
   }
 
-  // FOR YOU: MAKE SURE THE STRING YOU ARE PASSING IN IS NOT TOO BIG
-  // return stack_element_too_large if so
 
   s->elements[s->top] = strdup(item);
   if (s->elements[s->top] == NULL) {
@@ -95,9 +94,9 @@ void destroy(stack *s) {
     return;
   }
   for (int i = 0; i < (*s)->top; i++) {
-    free((*s)->elements[i]); // Free each string
+    free((*s)->elements[i]); // free each string
   }
-  free((*s)->elements); // Free the array
-  free(*s);             // Free the stack structure
-  *s = NULL;            // Nullify the pointer
+  free((*s)->elements); // free the array
+  free(*s);             // free the stack structure
+  *s = NULL;            // nullify the pointer
 }

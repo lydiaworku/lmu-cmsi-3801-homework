@@ -8,9 +8,9 @@ using namespace std;
 #define INITIAL_CAPACITY 16
 
 template <typename T> class Stack {
-  unique_ptr<T[]> elements; // Smart pointer to the array of elements
-  int capacity;             // Current capacity of the array
-  int top;                  // Index of the next available slot
+  unique_ptr<T[]> elements; // smart pointer to the array of elements
+  int capacity;             // current capacity of array
+  int top;                  // index of next available slot
 
   // Prohibit copying and assignment
   Stack(const Stack<T> &) = delete;
@@ -42,11 +42,10 @@ public:
       throw underflow_error("cannot pop from empty stack");
     }
 
-    T popped_item = elements[--top]; // Retrieve the top element
-    elements[top] = T();             // Clear the slot (for security)
+    T popped_item = elements[--top]; // get the top element
+    elements[top] = T();             // clear the slot (for security)
 
-    // Shrink the stack if the size is <= 1/4 of the capacity, but not below
-    // INITIAL_CAPACITY
+    // shrink the stack if the size is <= 1/4 of the capacity, but not below
     if (capacity > INITIAL_CAPACITY && top <= capacity / 4) {
       reallocate(max(capacity / 2, INITIAL_CAPACITY));
     }
@@ -57,16 +56,16 @@ public:
 private:
   void reallocate(int new_capacity) {
     if (new_capacity > MAX_CAPACITY || new_capacity < INITIAL_CAPACITY) {
-      return; // Do nothing if the new capacity is invalid
+      return;
     }
 
-    // Allocate a new array with the new capacity
+    // allocate a new array with the new capacity
     unique_ptr<T[]> new_elements = make_unique<T[]>(new_capacity);
 
-    // Copy elements from the old array to the new array
+    // copy elements from the old array to the new array
     copy(&elements[0], &elements[top], &new_elements[0]);
 
-    // Transfer ownership of the new array to the stack
+    // transfer ownership of the new array to the stack
     elements = std::move(new_elements);
     capacity = new_capacity;
   }
